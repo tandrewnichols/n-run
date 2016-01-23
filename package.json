@@ -1,0 +1,61 @@
+{
+  "name": "n-run",
+  "description": "Run a command against a series of node versions using n",
+  "version": "1.0.0",
+  "main": "lib/n-run.js",
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tandrewnichols/n-run.git"
+  },
+  "keywords": [
+    "n",
+    "use",
+    "binary",
+    "version",
+    "run",
+    "matrix"
+  ],
+  "author": {
+    "name": "Andrew Nichols",
+    "email": "tandrewnichols@gmail.com",
+    "url": "www.tandrewnichols.me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tandrewnichols/n-run/issues"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "homepage": "https://github.com/tandrewnichols/n-run",
+  "dependencies": {
+    "async": "^1.5.2",
+    "chalk": "^1.1.1",
+    "lodash": "^4.0.0",
+    "n-wrap": "^1.0.1"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "file-manifest": "^2.0.1",
+    "gulp": "^3.9.0",
+    "gulp-codeclimate-reporter": "^1.2.0",
+    "gulp-debug": "^2.1.2",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-jshint": "^2.0.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-open": "^1.0.0",
+    "gulp-sequence": "^0.4.4",
+    "gulp-spawn-mocha": "^2.2.2",
+    "jshint": "^2.9.1",
+    "jshint-stylish": "^2.1.0",
+    "mocha": "^2.3.4",
+    "mocha-given": "^0.1.3",
+    "rimraf": "^2.5.1",
+    "should": "^8.1.1",
+    "should-sinon": "0.0.3",
+    "sinon": "^1.17.2"
+  }
+}
