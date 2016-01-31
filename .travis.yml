@@ -3,8 +3,9 @@ sudo: false
 install:
   - "npm install -g n"
   - "npm install"
-  - "echo $N_PREFIX"
 script:
+  - "echo $(npm prefix -g)"
+  - "echo $N_PREFIX"
   - "gulp travis"
 node_js:
   - "0.10"
