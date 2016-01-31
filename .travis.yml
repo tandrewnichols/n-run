@@ -4,7 +4,7 @@ install:
   - "npm install -g n"
   - "npm install"
 script:
-  - "ls $(npm prefix -g)"
+  - "ls $(npm prefix -g)/bin"
   - "gulp travis"
 node_js:
   - "0.10"
