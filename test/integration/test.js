@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var str = process.version;
+console.log(str);
 
 fs.stat(__dirname + '/output.txt', function(err, stat) {
   if (!err) {
