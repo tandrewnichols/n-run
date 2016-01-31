@@ -1,7 +1,7 @@
 language: node_js
 sudo: false
 install:
-  - "export $N_PREFIX=$HOME/bin"
+  - "export N_PREFIX=$HOME/bin"
   - "npm install -g n"
   - "npm install"
 script:
