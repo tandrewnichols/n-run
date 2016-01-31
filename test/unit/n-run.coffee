@@ -13,12 +13,14 @@ describe 'n-run', ->
     load: sinon.stub()
     config:
       prefix: '/banana'
+  Given -> @installed = sinon.stub()
   Given -> @install = sinon.stub()
   Given -> @cb = sinon.stub()
   Given -> @subject = require('proxyquire').noCallThru() '../../lib/n-run',
     'n-wrap': @n
     npm: @npm
     'n-install-missing': @install
+    'n-installed': @installed
 
   afterEach -> console.log.restore()
   Given -> sinon.stub console, 'log'
@@ -39,9 +41,9 @@ describe 'n-run', ->
     When -> @subject.run 'foo bar', ['2.0.0', '4.0.0'], @cb
     Then ->
       @cb.calledWith(null).should.be.true()
-      console.log.getCall(2).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('2.0.0')]
-      console.log.getCall(6).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('4.0.0')]
-      console.log.getCall(9).args.should.eql ['foo bar', 'completed successfully in node versions', '2.0.0 and 4.0.0']
+      console.log.getCall(1).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('2.0.0')]
+      console.log.getCall(3).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('4.0.0')]
+      console.log.getCall(5).args.should.eql ['foo bar', 'completed successfully in node versions', '2.0.0 and 4.0.0']
 
   context 'errors', ->
     context 'async error', ->
@@ -57,7 +59,6 @@ describe 'n-run', ->
         @n.io.use.called.should.be.false()
 
     context 'n-run error', ->
-      #Given -> @n.use.withArgs('4.0.0', ['foo', 'bar'], sinon.match.func).callsArgWith 2, 'error'
       Given -> @n.io.use.withArgs('2.0.0', ['foo', 'bar'], sinon.match.func).callsArgWith 2, 'error'
       Given -> @install.withArgs(['2.0.0', '4.0.0'],
         install: true
@@ -67,12 +68,13 @@ describe 'n-run', ->
       When -> @subject.run 'foo bar', ['2.0.0', '4.0.0'], @cb
       Then ->
         @cb.calledWith('error').should.be.true()
-        console.log.getCall(2).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('2.0.0')]
-        console.log.getCall(5).args.should.eql ['foo bar', 'failed on one or more versions of node']
+        console.log.getCall(1).args.should.eql ['Executing', 'foo bar', 'on version', chalk.green('2.0.0')]
+        console.log.getCall(3).args.should.eql ['foo bar', 'failed on one or more versions of node']
     
-  context 'command is array (and install is false)', ->
+  context 'command is array and install is false', ->
     Given -> @n.use.withArgs('4.0.0', ['foo', 'bar'], sinon.match.func).callsArgWith 2, null
     Given -> @n.io.use.withArgs('2.0.0', ['foo', 'bar'], sinon.match.func).callsArgWith 2, null
+    Given -> @installed.callsArgWith 0, null, { io: ['2.0.0'], node: ['4.0.0'] }
     When -> @subject.run ['foo', 'bar'], ['2.0.0', '4.0.0'],
       install: false
       quiet: true
@@ -81,6 +83,18 @@ describe 'n-run', ->
       @cb.calledWith(null).should.be.true()
       @install.called.should.be.false()
       console.log.called.should.be.false()
+
+  context 'command is array, install is false, and some binaries are missing', ->
+    Given -> @n.use.withArgs('4.0.0', ['foo', 'bar'], sinon.match.func).callsArgWith 2, null
+    Given -> @installed.callsArgWith 0, null, { io: [], node: ['4.0.0'] }
+    When -> @subject.run ['foo', 'bar'], ['2.0.0', '4.0.0'],
+      install: false
+    , @cb
+    Then ->
+      @cb.calledWith(null).should.be.true()
+      @n.io.use.called.should.be.false()
+      @install.called.should.be.false()
+      console.log.getCall(1).args.should.eql ['Version', '2.0.0', 'is not installed. Skipping . . .']
 
   context 'semver ranges (and opts.global is true)', ->
     Given -> @npm.load.callsArgWith 1, null
@@ -96,6 +110,6 @@ describe 'n-run', ->
     When -> @subject.run 'foo bar', ['2', '4.0.0'], global: true, @cb
     Then ->
       @cb.calledWith(null).should.be.true()
-      console.log.getCall(2).args.should.eql ['Executing', '/banana/bin/foo bar', 'on version', chalk.green('2.2.0')]
-      console.log.getCall(6).args.should.eql ['Executing', '/banana/bin/foo bar', 'on version', chalk.green('4.0.0')]
-      console.log.getCall(9).args.should.eql ['/banana/bin/foo bar', 'completed successfully in node versions', '2.2.0 and 4.0.0']
+      console.log.getCall(1).args.should.eql ['Executing', '/banana/bin/foo bar', 'on version', chalk.green('2.2.0')]
+      console.log.getCall(3).args.should.eql ['Executing', '/banana/bin/foo bar', 'on version', chalk.green('4.0.0')]
+      console.log.getCall(5).args.should.eql ['/banana/bin/foo bar', 'completed successfully in node versions', '2.2.0 and 4.0.0']
