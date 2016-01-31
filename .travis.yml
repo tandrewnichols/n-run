@@ -1,7 +1,7 @@
 language: node_js
 sudo: false
 install:
-  - "curl -L http://git.io/n-install | bash"
+  - "npm install -g n"
   - "npm install"
 script:
   - "gulp travis"
