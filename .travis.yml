@@ -3,6 +3,7 @@ sudo: false
 install:
   - "npm install -g n"
   - "npm install"
+  - "echo $N_PREFIX"
 script:
   - "gulp travis"
 node_js:
