@@ -38,7 +38,7 @@
     "is-semver-range": "^1.0.0",
     "listify": "^1.0.0",
     "lodash": "^4.0.1",
-    "lodash-aliases": "^1.0.1",
+    "lodash-aliases": "^1.1.0",
     "n-install-missing": "^1.0.2",
     "n-installed": "^2.0.0",
     "n-wrap": "^1.0.1",
