@@ -1,7 +1,7 @@
 {
   "name": "n-run",
   "description": "Run a command against a series of node versions using n",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/n-run.js",
   "scripts": {
     "test": "gulp"
