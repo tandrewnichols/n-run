@@ -62,6 +62,51 @@ n.run('foo bar', ['4.2.6', '5.5.0'], { quiet: true, install: false }, function(e
 });
 ```
 
+## Testing your .travis build matrix
+
+The use case I built n-run for was local testing against a travis build matrix. If you use grunt for tests, you can install [grunt-test-matrix](https://github.com/tandrewnichols/grunt-test-matrix) and add configuration like:
+
+```
+grunt.initConfig({
+  testMatrix: {
+    mocha: {
+      task: ['mocha:unit', 'mocha:integration']
+    }
+  }
+});
+```
+
+If you use gulp, there isn't a specific plugin, since this isn't exactly a stream-compatible operation, but it's simple to do in a task by installing this and [travis-yaml](https://github.com/tandrewnichols/travis-yaml) and adding this (tested) code:
+
+```
+var gulp = require('gulp');
+var n = require('n-run');
+var travisYaml = require('travis-yaml');
+
+gulp.task('run', function(done) {
+  travisYaml(function(err, travis) {
+    var versions = travis.node_js;
+    /*
+     * If you include any versions of io.js in your build,
+     * enable this block to map the "iojs-v2" style version
+     * to one usable by n-run
+     */
+    //versions = versions.map(function(version) {
+      //return version.replace('iojs-v', '');
+    //});
+
+    // Replace "unit" with your testing task.
+    n.run(['gulp', 'unit'], versions, { global: true }, done);
+
+    /*
+     * If you install gulp locally as a dependency, use this line
+     * instead of the one above, so that n can find the gulp binary.
+     */
+    //n.run(['./node_modules/.bin/gulp', 'unit'], versions, done);
+  });
+});
+```
+
 ## Contributing
 
 Please see [the contribution guidelines](CONTRIBUTING.md).
